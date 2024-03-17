@@ -4,7 +4,7 @@
 local M = {}
 
 ---@class DiffThisConfiguration
-M.defaults = {
+local defaults = {
     keys = {
         toggle = "<leader>dd",
         obtain = "do",
@@ -25,7 +25,7 @@ M.defaults = {
 M.config = {}
 
 M.setup = function(opts)
-    M.config = vim.tbl_deep_extend("force", M.defaults, opts or {})
+    M.config = vim.tbl_deep_extend("force", defaults, opts or {})
 end
 
 return M
