@@ -18,16 +18,14 @@ return {
         original_file = "",
         last_action = {},
         wnd_obj = {
-            left = {
-                loc = {
-                    buffer = -1,
-                    window = -1,
-                },
-                remote = {
-                    buffer = -1,
-                    window = -1,
-                }
+            loc = {
+                buffer = -1,
+                window = -1,
             },
+            remote = {
+                buffer = -1,
+                window = -1,
+            }
         },
     }
 }

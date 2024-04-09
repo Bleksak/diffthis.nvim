@@ -11,7 +11,7 @@ local defaults = {
         put = "dp",
         next = "dn",
         prev = "dN",
-    }
+    },
 }
 
 ---@class DiffThisConfigurationKeys
@@ -20,6 +20,7 @@ local defaults = {
 ---@field put string
 ---@field next string
 ---@field prev string
+---@field markers boolean
 
 ---@type DiffThisConfiguration
 M.config = {}

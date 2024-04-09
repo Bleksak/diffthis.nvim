@@ -6,9 +6,10 @@ M.create_window_with_diff = function(buf, enter)
     return win
 end
 
-M.create_buffer_with_content = function(content)
+M.create_buffer_with_content = function(content, bufname)
     local buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_buf_set_lines(buf, 0, -1, true, content)
+    vim.api.nvim_buf_set_name(buf, bufname)
     return buf
 end
 
