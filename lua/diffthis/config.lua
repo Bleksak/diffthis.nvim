@@ -9,8 +9,8 @@ local defaults = {
         toggle = "<leader>dd",
         obtain = "do",
         put = "dp",
-        next = "dn",
-        prev = "dN",
+        next = "<C-j>",
+        prev = "<C-k>",
     },
 }
 

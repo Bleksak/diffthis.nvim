@@ -1,31 +1,49 @@
 ---@class DiffState
 ---@field original_buffer number
 ---@field original_file string
----@field last_action string
 ---@field wnd_obj DiffWindowObjects
+---@field code_snapshot string[]
 
 ---@class DiffWindowObjects
----@field left DiffWindowObject
----@field right DiffWindowObject
+---@field loc DiffWindowObject
+---@field remote DiffWindowObject
 
 ---@class DiffWindowObject
----@field loc number
----@field remote number
+---@field buffer number
+---@field window number
+
+local default_state = {
+    original_buffer = -1,
+    original_file = "",
+    wnd_obj = {
+        loc = {
+            buffer = -1,
+            window = -1,
+            undo = {
+                queue = {},
+            },
+        },
+        remote = {
+            buffer = -1,
+            window = -1,
+            undo = {
+                queue = {},
+            },
+        }
+    },
+    undo = {
+        queues = {},
+        sorting = {
+            queue = {},
+            undos = {},
+        }
+    },
+    code_snapshot = {},
+    ignore_changes = false,
+}
 
 return {
-    default_state = {
-        original_buffer = -1,
-        original_file = "",
-        last_action = {},
-        wnd_obj = {
-            loc = {
-                buffer = -1,
-                window = -1,
-            },
-            remote = {
-                buffer = -1,
-                window = -1,
-            }
-        },
-    }
+    ---@type DiffState
+    default_state = default_state,
+    current_state = vim.deepcopy(default_state, true),
 }
