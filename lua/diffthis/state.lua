@@ -36,7 +36,8 @@ local default_state = {
         sorting = {
             queue = {},
             undos = {},
-        }
+        },
+        in_undo = false,
     },
     code_snapshot = {},
     ignore_changes = false,

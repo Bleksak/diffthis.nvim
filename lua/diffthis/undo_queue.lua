@@ -1,6 +1,12 @@
 ---@class DiffThisUndoItem
 ---@field buffer number
 ---@field buffer_content string[]
+---@field window number
+---@field cursor CursorPos
+
+---@class CursorPos
+---@field row number
+---@field col number
 
 ---@class DiffThisUndoSort
 ---@field queue DiffThisUndoSortItem[] -- queue of buffers
@@ -22,6 +28,17 @@ local function get_total_undos(sorting)
 end
 
 local state = require("diffthis.state")
+
+---@param queues DiffThisUndoItem[][]
+---@param sorting DiffThisUndoSort
+---@param buffer number
+M.get_previous = function(queues, sorting, buffer)
+    local buffer_undos = sorting.undos[buffer]
+    local queue = queues[buffer]
+    local queue_item = queue[#queue - buffer_undos]
+
+    return queue_item.buffer_content
+end
 
 ---@param queue DiffThisUndoItem[]
 ---@param sorting DiffThisUndoSort
@@ -71,11 +88,12 @@ M.redo = function(queues, sorting)
         return nil
     end
 
-    local buffer = sorting.queue[#sorting.queue - total - 1].buffer
-    sorting.undos[buffer] = sorting.undos[buffer] - 1
+    local buffer = sorting.queue[#sorting.queue - total].buffer
     local undos = sorting.undos[buffer]
+    sorting.undos[buffer] = sorting.undos[buffer] - 1
 
-    local value = queues[buffer][#sorting.undos[buffer] - undos]
+    local queue_size = #queues[buffer]
+    local value = queues[buffer][queue_size - undos + 1]
 
     return value
 end

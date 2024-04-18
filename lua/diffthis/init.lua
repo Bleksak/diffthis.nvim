@@ -52,11 +52,11 @@ M.open_file = function()
     state.current_state.wnd_obj.remote.window = rem_win
 
     state.current_state.undo.queues[loc_buffer] = {
-        { buffer = loc_buffer, buffer_content = vim.api.nvim_buf_get_lines(loc_buffer, 0, -1, true) },
+        { buffer = loc_buffer, buffer_content = vim.api.nvim_buf_get_lines(loc_buffer, 0, -1, true), cursor = vim.api.nvim_win_get_cursor(loc_win), window = loc_win },
     }
 
     state.current_state.undo.queues[rem_buffer] = {
-        { buffer = rem_buffer, buffer_content = vim.api.nvim_buf_get_lines(rem_buffer, 0, -1, true) },
+        { buffer = rem_buffer, buffer_content = vim.api.nvim_buf_get_lines(rem_buffer, 0, -1, true), cursor = vim.api.nvim_win_get_cursor(rem_win), window = rem_win },
     }
 
     state.current_state.undo.sorting.queue = {
