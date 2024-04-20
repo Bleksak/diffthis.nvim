@@ -27,20 +27,8 @@ M.open_file = function()
 
     local lines = vim.api.nvim_buf_get_lines(current_buf, 0, -1, true)
 
-    local rem_buffer = M.window.create_buffer_with_content(M.markers.get_remote(lines))
-    local loc_buffer = M.window.create_buffer_with_content(M.markers.get_local(lines))
-
-    vim.api.nvim_set_option_value("buftype", "nofile", { buf = loc_buffer })
-    -- vim.api.nvim_set_option_value("readonly", true, { buf = loc_buffer })
-    vim.api.nvim_set_option_value("buflisted", false, { buf = loc_buffer })
-    vim.api.nvim_set_option_value("bufhidden", "delete", { buf = loc_buffer })
-    vim.api.nvim_set_option_value("filetype", filetype, { buf = loc_buffer })
-
-    -- vim.api.nvim_set_option_value("readonly", true, { buf = rem_buffer })
-    vim.api.nvim_set_option_value("buftype", "nofile", { buf = rem_buffer })
-    vim.api.nvim_set_option_value("buflisted", false, { buf = rem_buffer })
-    vim.api.nvim_set_option_value("bufhidden", "delete", { buf = rem_buffer })
-    vim.api.nvim_set_option_value("filetype", filetype, { buf = rem_buffer })
+    local rem_buffer = M.window.create_buffer_with_content(M.markers.get_remote(lines), filetype)
+    local loc_buffer = M.window.create_buffer_with_content(M.markers.get_local(lines), filetype)
 
     local loc_win = M.window.create_window_with_diff(loc_buffer, true)
     local rem_win = M.window.create_window_with_diff(rem_buffer, true)

@@ -7,10 +7,14 @@ M.create_window_with_diff = function(buf, enter)
     return win
 end
 
-M.create_buffer_with_content = function(content)
+M.create_buffer_with_content = function(content, filetype)
     local buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_buf_set_lines(buf, 0, -1, true, content)
     vim.api.nvim_buf_set_name(buf, vim.fn.tempname())
+    vim.api.nvim_set_option_value("buftype", "nofile", { buf = buf })
+    vim.api.nvim_set_option_value("buflisted", false, { buf = buf })
+    vim.api.nvim_set_option_value("bufhidden", "delete", { buf = buf })
+    vim.api.nvim_set_option_value("filetype", filetype, { buf = buf })
     return buf
 end
 
