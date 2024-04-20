@@ -37,6 +37,7 @@ M.open_file = function()
     vim.api.nvim_set_option_value("filetype", filetype, { buf = loc_buffer })
 
     -- vim.api.nvim_set_option_value("readonly", true, { buf = rem_buffer })
+    vim.api.nvim_set_option_value("buftype", "nofile", { buf = rem_buffer })
     vim.api.nvim_set_option_value("buflisted", false, { buf = rem_buffer })
     vim.api.nvim_set_option_value("bufhidden", "delete", { buf = rem_buffer })
     vim.api.nvim_set_option_value("filetype", filetype, { buf = rem_buffer })
