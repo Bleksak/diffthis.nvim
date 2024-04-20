@@ -27,8 +27,11 @@ M.open_file = function()
 
     local lines = vim.api.nvim_buf_get_lines(current_buf, 0, -1, true)
 
-    local rem_buffer = M.window.create_buffer_with_content(M.markers.get_remote(lines), filetype)
-    local loc_buffer = M.window.create_buffer_with_content(M.markers.get_local(lines), filetype)
+    local rem_buffer_markers = M.markers.get_remote(lines)
+    local loc_buffer_markers = M.markers.get_local(lines)
+
+    local rem_buffer = M.window.create_buffer_with_content(rem_buffer_markers.lines, filetype)
+    local loc_buffer = M.window.create_buffer_with_content(loc_buffer_markers.lines, filetype)
 
     local loc_win = M.window.create_window_with_diff(loc_buffer, true)
     local rem_win = M.window.create_window_with_diff(rem_buffer, true)
@@ -39,6 +42,9 @@ M.open_file = function()
     state.current_state.wnd_obj.loc.window = loc_win
     state.current_state.wnd_obj.remote.buffer = rem_buffer
     state.current_state.wnd_obj.remote.window = rem_win
+
+    state.current_state.wnd_obj.loc.label = loc_buffer_markers.label
+    state.current_state.wnd_obj.remote.label = rem_buffer_markers.label
 
     state.current_state.undo.queues[loc_buffer] = {
         {
@@ -85,11 +91,34 @@ local close = function()
     vim.api.nvim_set_current_buf(state.current_state.original_buffer)
     vim.api.nvim_set_current_win(win)
 
+    vim.api.nvim_set_option_value("buftype", "", { buf = state.current_state.wnd_obj.loc.buffer })
+    vim.api.nvim_set_option_value("buftype", "", { buf = state.current_state.wnd_obj.remote.buffer })
 
-    vim.api.nvim_buf_set_lines(state.current_state.original_buffer, 0, -1, true,
-        vim.api.nvim_buf_get_lines(state.current_state.wnd_obj.remote.buffer, 0, -1, true)
-    )
-    vim.cmd("w!")
+    vim.api.nvim_buf_call(state.current_state.wnd_obj.loc.buffer, function() vim.cmd("w") end)
+    vim.api.nvim_buf_call(state.current_state.wnd_obj.remote.buffer, function() vim.cmd("w") end)
+
+    local loc_tmp_file = vim.api.nvim_buf_get_name(state.current_state.wnd_obj.loc.buffer)
+    local remote_tmp_file = vim.api.nvim_buf_get_name(state.current_state.wnd_obj.remote.buffer)
+
+    local tmp_file = vim.fn.tempname()
+
+    io.popen("touch " .. tmp_file):close()
+
+    local handle = assert(io.popen(
+        "git merge-file -p " .. remote_tmp_file .. " " .. tmp_file .. " " .. loc_tmp_file ..
+        " -L " .. state.current_state.wnd_obj.remote.label .. " -L tmp -L " .. state.current_state.wnd_obj.loc.label
+    ))
+
+    local result = handle:read("*a")
+    handle:close()
+
+    local lines = vim.split(result, "\n")
+
+    io.popen("rm " .. tmp_file):close()
+    io.popen("rm " .. loc_tmp_file):close()
+    io.popen("rm " .. remote_tmp_file):close()
+
+    vim.api.nvim_buf_set_lines(state.current_state.original_buffer, 0, -1, true, lines)
 
     M.window.close_window(state.current_state.wnd_obj.loc.window)
     M.window.close_window(state.current_state.wnd_obj.remote.window)

@@ -11,6 +11,7 @@
 ---@class DiffWindowObject
 ---@field buffer number
 ---@field window number
+---@field label string
 
 local default_state = {
     original_buffer = -1,
@@ -19,6 +20,7 @@ local default_state = {
         loc = {
             buffer = -1,
             window = -1,
+            label = "",
             undo = {
                 queue = {},
             },
@@ -26,6 +28,7 @@ local default_state = {
         remote = {
             buffer = -1,
             window = -1,
+            label = "",
             undo = {
                 queue = {},
             },
