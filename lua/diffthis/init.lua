@@ -27,8 +27,8 @@ M.open_file = function()
 
     local lines = vim.api.nvim_buf_get_lines(current_buf, 0, -1, true)
 
-    local rem_buffer = M.window.create_buffer_with_content(M.markers.get_remote(lines), "REMOTE")
-    local loc_buffer = M.window.create_buffer_with_content(M.markers.get_local(lines), "LOCAL")
+    local rem_buffer = M.window.create_buffer_with_content(M.markers.get_remote(lines))
+    local loc_buffer = M.window.create_buffer_with_content(M.markers.get_local(lines))
 
     vim.api.nvim_set_option_value("buftype", "nofile", { buf = loc_buffer })
     -- vim.api.nvim_set_option_value("readonly", true, { buf = loc_buffer })
@@ -52,11 +52,21 @@ M.open_file = function()
     state.current_state.wnd_obj.remote.window = rem_win
 
     state.current_state.undo.queues[loc_buffer] = {
-        { buffer = loc_buffer, buffer_content = vim.api.nvim_buf_get_lines(loc_buffer, 0, -1, true), cursor = vim.api.nvim_win_get_cursor(loc_win), window = loc_win },
+        {
+            buffer = loc_buffer,
+            buffer_content = vim.api.nvim_buf_get_lines(loc_buffer, 0, -1, true),
+            cursor = vim.api.nvim_win_get_cursor(loc_win),
+            window = loc_win
+        },
     }
 
     state.current_state.undo.queues[rem_buffer] = {
-        { buffer = rem_buffer, buffer_content = vim.api.nvim_buf_get_lines(rem_buffer, 0, -1, true), cursor = vim.api.nvim_win_get_cursor(rem_win), window = rem_win },
+        {
+            buffer = rem_buffer,
+            buffer_content = vim.api.nvim_buf_get_lines(rem_buffer, 0, -1, true),
+            cursor = vim.api.nvim_win_get_cursor(rem_win),
+            window = rem_win
+        },
     }
 
     state.current_state.undo.sorting.queue = {
@@ -82,13 +92,14 @@ local open = function()
 end
 
 local close = function()
-    local w = vim.api.nvim_open_win(state.current_state.original_buffer, true, { vertical = true, focusable = true })
+    local win = vim.api.nvim_open_win(state.current_state.original_buffer, true, { vertical = true, focusable = true })
     vim.api.nvim_set_current_buf(state.current_state.original_buffer)
-    vim.api.nvim_set_current_win(w)
+    vim.api.nvim_set_current_win(win)
 
 
     vim.api.nvim_buf_set_lines(state.current_state.original_buffer, 0, -1, true,
-        vim.api.nvim_buf_get_lines(state.current_state.wnd_obj.remote.buffer, 0, -1, true))
+        vim.api.nvim_buf_get_lines(state.current_state.wnd_obj.remote.buffer, 0, -1, true)
+    )
     vim.cmd("w!")
 
     M.window.close_window(state.current_state.wnd_obj.loc.window)

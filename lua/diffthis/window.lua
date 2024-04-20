@@ -3,13 +3,14 @@ local M = {}
 M.create_window_with_diff = function(buf, enter)
     local win = vim.api.nvim_open_win(buf, enter, { vertical = true, focusable = true })
     vim.fn.setwinvar(win, "&diff", 1)
+    vim.api.nvim_set_option_value("cursorbind", true, { win = win })
     return win
 end
 
-M.create_buffer_with_content = function(content, bufname)
+M.create_buffer_with_content = function(content)
     local buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_buf_set_lines(buf, 0, -1, true, content)
-    vim.api.nvim_buf_set_name(buf, bufname)
+    vim.api.nvim_buf_set_name(buf, vim.fn.tempname())
     return buf
 end
 
