@@ -5,6 +5,7 @@ Use neovim as a diffing tool
 ## Requirements
 
 - neovim
+- git
 
 ## Installation
 
@@ -27,7 +28,7 @@ Use neovim as a diffing tool
 ## Usage
 
 Use your toggle key binding to toggle the diff window, then you can use the key bindings you have set to resolve merge conflicts.
-Toggling back will save the left buffer as the original file. Even if there are any conflicts left, so make sure to resolve every conflict before toggling back. This will probably get fixed in a future version of this plugin.
+Toggling back will save the left buffer as the original file. If there are any unresolved conflicts, diff markers will be created for them using git merge-file.
 
 ## Contributing
 
