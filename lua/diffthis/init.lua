@@ -106,7 +106,7 @@ local close = function()
 
     local handle = assert(io.popen(
         "git merge-file -p " .. remote_tmp_file .. " " .. tmp_file .. " " .. loc_tmp_file ..
-        " -L " .. state.current_state.wnd_obj.remote.label .. " -L tmp -L " .. state.current_state.wnd_obj.loc.label
+        " -L \"" .. state.current_state.wnd_obj.remote.label .. "\" -L tmp -L \"" .. state.current_state.wnd_obj.loc.label .. "\"2>&1"
     ))
 
     local result = handle:read("*a")
